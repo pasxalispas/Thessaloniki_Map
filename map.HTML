@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Χάρτης Θεσσαλονίκης με Leaflet.js</title>
+    <!-- Leaflet.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 100vh; /* Ο χάρτης να καλύπτει όλο το ύψος του παραθύρου */
+            margin: 0;
+        }
+        #controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="controls">
+        
+    </div>
+
+    <!-- Leaflet.js JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Δημιουργία χάρτη και κεντράρισμα στη Θεσσαλονίκη
+        const map = L.map('map').setView([40.6401, 22.9444], 13);
+
+        // Προσθήκη βασικού χάρτη (OpenStreetMap tiles)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Σημεία ενδιαφέροντος
+        const pointsOfInterest = [
+            {
+                name: "Λευκός Πύργος-White Tower",
+                coords: [40.6263, 22.9485],
+                url: "https://www.lpth.gr/"
+            },
+            {
+                name: "Αψίδα του Γαλερίου (Καμάρα)-Arch of Galerius(Kamara)",
+                coords: [40.6339, 22.9502],
+                url: "https://el.wikipedia.org/wiki/%CE%91%CF%88%CE%AF%CE%B4%CE%B1_%CF%84%CE%BF%CF%85_%CE%93%CE%B1%CE%BB%CE%B5%CF%81%CE%AF%CE%BF%CF%85"
+            },
+            {
+                name: "Άνω Πόλη-Ano Poli",
+                coords: [40.64056, 22.95385],
+                url: "https://el.wikipedia.org/wiki/%CE%86%CE%BD%CF%89_%CE%A0%CF%8C%CE%BB%CE%B7_%CE%98%CE%B5%CF%83%CF%83%CE%B1%CE%BB%CE%BF%CE%BD%CE%AF%CE%BA%CE%B7%CF%82"
+            },
+            {
+                name: "Αεροδρόμιο Θεσσαλονίκης-Airport Macedonia",
+                coords: [40.5197, 22.9709],
+                url: "https://www.skg-airport.gr/el/"
+            },
+            {
+                name: "Αρχαιολογικό Μουσείο Θεσσαλονίκης-Archaeological Museum of Thessaloniki",
+                coords: [40.6326161213522, 22.95176604632659],
+                url: "https://www.amth.gr/"
+            },
+            {
+                name: "Πλατεία Αριστοτέλους-Aristotelous Square",
+                coords: [40.63243301213692, 22.940742832884627],
+                url: "https://www.skylinewebcams.com/el/webcam/ellada/makedonia/thessaloniki/plateia-aristotelous.html"
+            },
+            {
+                name: "Ρωμαϊκή Αγορά-Roman Forum of Thessaloniki",
+                coords: [40.638170905302076, 22.94675672178077],
+                url: "https://www.thessalonikitourism.gr/index.php/el/component/k2/item/376-archaeological-museum-of-ancient-roman-forum-thessaloniki"
+            },
+            {
+                name: "1ο ΕΕΕΕΚ Πυλαίας-Χορτιάτη",
+                coords: [40.59775, 23.04824],
+                url: "https://blogs.sch.gr/1eeeekpanor/about/?repeat=w3tc"
+            },
+            {
+                name: "Σταθμός ΟΣΕ Θεσσαλονίκης-Train Station",
+                coords: [40.644301852985386, 22.929050215708976],
+                url: "https://el.wikipedia.org/wiki/%CE%A3%CF%84%CE%B1%CE%B8%CE%BC%CF%8C%CF%82_%CE%9D%CE%AD%CE%BF%CF%82_%CE%A3%CE%B9%CE%B4%CE%B7%CF%81%CE%BF%CE%B4%CF%81%CE%BF%CE%BC%CE%B9%CE%BA%CF%8C%CF%82_%CE%A3%CF%84%CE%B1%CE%B8%CE%BC%CF%8C%CF%82_(%CE%9C%CE%B5%CF%84%CF%81%CF%8C_%CE%98%CE%B5%CF%83%CF%83%CE%B1%CE%BB%CE%BF%CE%BD%CE%AF%CE%BA%CE%B7%CF%82)"
+            },
+            {
+                name: "Σταθμός ΚΤΕΛ Θεσσαλονίκης-Bus Station",
+                coords: [40.6521, 22.9114],
+                url: "https://ktelmacedonia.gr"
+            },
+            {
+                name: "Πύργος Τριγωνίου-Triangle Tower",
+                coords: [40.6436, 22.9633],
+                url: "https://www.info-neapolis-sykeon.gr/project/chain-triangle-tower/"
+            },
+            {
+                name: "Λαδάδικα-Ladadika",
+                coords: [40.63457240610405, 22.93714114075],
+                url: "https://inthessaloniki.com/el/%CF%86%CE%B1%CE%B3%CE%B7%CF%84%CF%8C/%CE%BB%CE%B1%CE%B4%CE%AC%CE%B4%CE%B9%CE%BA%CE%B1/"
+            },
+            {
+                name: "Αγία Σοφία-Holy Church of Hagia Sophia",
+                coords: [40.63273496277672, 22.947008317038595],
+                url: "https://www.thessalonikitourism.gr/index.php/el/component/k2/item/365-church-of-the-wisdom-of-god-church-of-agia-sophia"
+            },
+            {
+                name: "Άγιος Δημήτριος-Agios Dimitros Church",
+                coords: [40.63926340731197, 22.947590529194038],
+                url: "https://www.agdimitriosthes.gr/"
+            },
+            {
+                name: "Μέγαρο Μουσικής-Concert Hall",
+                coords: [40.59827935240179, 22.948710484344954],
+                url: "https://www.tch.gr/"
+            },
+
+            {
+                name: "Επταπύργιο-Γεντί Κουλέ-Heptapyrgion of Thessaloniki-Genti Koule",
+                coords: [40.64444447645416, 22.961785785781014],
+                url: "https://el.wikipedia.org/wiki/%CE%95%CF%80%CF%84%CE%B1%CF%80%CF%8D%CF%81%CE%B3%CE%B9%CE%BF_(%CE%98%CE%B5%CF%83%CF%83%CE%B1%CE%BB%CE%BF%CE%BD%CE%AF%CE%BA%CE%B7)"
+            }, 
+        ];
+
+        // Προσθήκη σημείων στον χάρτη
+        pointsOfInterest.forEach(point => {
+            L.marker(point.coords)
+                .addTo(map)
+                .bindPopup(`<b>${point.name}</b><br><a href="${point.url}" target="_blank">Περισσότερες πληροφορίες</a>`);
+        });
+
+        // Προσθήκη νέου σημείου μέσω φόρμας
+        document.getElementById('addPoint').addEventListener('click', () => {
+            const name = document.getElementById('name').value;
+            const lat = parseFloat(document.getElementById('lat').value);
+            const lng = parseFloat(document.getElementById('lng').value);
+            const url = document.getElementById('url').value;
+
+            if (name && !isNaN(lat) && !isNaN(lng) && url) {
+                const newPoint = { name, coords: [lat, lng], url };
+                L.marker(newPoint.coords)
+                    .addTo(map)
+                    .bindPopup(`<b>${newPoint.name}</b><br><a href="${newPoint.url}" target="_blank">Περισσότερες πληροφορίες</a>`);
+                alert(`Το σημείο "${name}" προστέθηκε!`);
+            } else {
+                alert('Παρακαλώ συμπληρώστε όλα τα πεδία σωστά.');
+            }
+        });
+    </script>
+</body>
+</html>
